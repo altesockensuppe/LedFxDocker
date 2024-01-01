@@ -12,9 +12,10 @@ RUN apt-get install -y gcc \
 		       portaudio19-dev \
 		       avahi-daemon \
 		       pulseaudio
+RUN pip install --upgrade pip
 RUN pip install --upgrade pip wheel setuptools
 RUN pip install lastversion
-RUN pip install git+https://github.com/LedFx/LedFx
+RUN pip install --use-pep517 git+https://github.com/LedFx/LedFx
 
 RUN apt-get install -y alsa-utils
 RUN adduser root pulse-access

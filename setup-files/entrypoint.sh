@@ -8,17 +8,7 @@ avahi-daemon --daemonize --no-drop-root
 rm -rf /var/run/pulse /var/lib/pulse /root/.config/pulse
 pulseaudio -D --verbose --exit-idle-time=-1 --system --disallow-exit
 
-if [[ -v FORMAT ]]; then
-    ./pipe-audio.sh
-fi
-
-if [[ -v HOST ]]; then
-    snapclient --host "$HOST" --daemon 1
-fi
-
-if [[ -v SQUEEZE ]]; then
-    ./squeeze.sh
-fi
+snapclient --host "$HOST" --daemon 1 --player pulse
 
 mkdir /app/ledfx-config
 
