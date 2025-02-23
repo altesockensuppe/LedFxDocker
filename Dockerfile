@@ -1,4 +1,4 @@
-FROM python:3.9-buster
+FROM python:3.11.9-bullseye
 
 WORKDIR /app
 
@@ -8,10 +8,11 @@ RUN apt-get update
 RUN apt-get install -y gcc \
                        git \
                        libatlas3-base \
-		       libavformat58 \
-		       portaudio19-dev \
-		       avahi-daemon \
-		       pulseaudio
+                       libavformat-dev \
+	portaudio19-dev \
+	avahi-daemon \
+	pulseaudio \
+                       cmake
 RUN pip install --upgrade pip
 RUN pip install --upgrade pip wheel setuptools
 RUN pip install lastversion
@@ -34,14 +35,13 @@ RUN apt-get install -y wget \
                        libavahi-client3:armhf \
                        libavahi-common3:armhf \
                        apt-utils \
-		       libvorbisidec1:armhf
+                       libvorbisidec1:armhf
 
 RUN apt-get install -y squeezelite 
 
 ARG TARGETPLATFORM
-RUN if [ "$TARGETPLATFORM" = "linux/arm/v7" ]; then ARCHITECTURE=armhf; elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then ARCHITECTURE=armhf; else ARCHITECTURE=amd64; fi \
-    && lastversion download badaix/snapcast --format assets --filter "^snapclient_(?:(\d+)\.)?(?:(\d+)\.)?(?:(\d+)\-)?(?:(\d)(_$ARCHITECTURE\.deb))$" -o snapclient.deb
 
+RUN curl -L https://github.com/badaix/snapcast/releases/download/v0.27.0/snapclient_0.27.0-1_armhf.deb -o snapclient.deb
 RUN apt-get install -fy ./snapclient.deb
 
 COPY setup-files/ /app/
